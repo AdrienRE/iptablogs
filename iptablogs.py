@@ -132,43 +132,43 @@ class Interface(object):
         self.trame_filtres.place(height=240, width=510, relx=0.27, rely=0.07)
         self.label_filtre_chaine = ttk.Label(self.trame_filtres, text="Chaine(s):")
         self.label_filtre_chaine.place(relx=0.001, rely=0.005)
-        self.inpbox_filtre_chaine = ttk.Entry(self.trame_filtres, width=48)
+        self.inpbox_filtre_chaine = ttk.Entry(self.trame_filtres, width=48, name="chaine")
         self.inpbox_filtre_chaine.place(relx=0.23, rely=0.005)
         self.label_filtre_date = ttk.Label(self.trame_filtres, text="Date(s):")
         self.label_filtre_date.place(relx=0, rely=0.1)
-        self.inpbox_filtre_date = ttk.Entry(self.trame_filtres, width=48)
+        self.inpbox_filtre_date = ttk.Entry(self.trame_filtres, width=48, name="date")
         self.inpbox_filtre_date.place(relx=0.23, rely=0.1)
         self.label_filtre_interface_in = ttk.Label(self.trame_filtres, text="Interface(s) IN:")
         self.label_filtre_interface_in.place(relx=0, rely=0.2)
-        self.inpbox_filtre_interface_in = ttk.Entry(self.trame_filtres, width=48)
+        self.inpbox_filtre_interface_in = ttk.Entry(self.trame_filtres, width=48, name="interface_in")
         self.inpbox_filtre_interface_in.place(relx=0.23, rely=0.2)
         self.label_filtre_interface_out = ttk.Label(self.trame_filtres, text="Interface(s) OUT:")
         self.label_filtre_interface_out.place(relx=0, rely=0.3)
-        self.inpbox_filtre_interface_out = ttk.Entry(self.trame_filtres, width=48)
+        self.inpbox_filtre_interface_out = ttk.Entry(self.trame_filtres, width=48, name="interface_out")
         self.inpbox_filtre_interface_out.place(relx=0.23, rely=0.3)
         self.label_filtre_adresse_mac = ttk.Label(self.trame_filtres, text="Adresse(s) MAC:")
         self.label_filtre_adresse_mac.place(relx=0, rely=0.4)
-        self.inpbox_filtre_adresse_mac = ttk.Entry(self.trame_filtres, width=48)
+        self.inpbox_filtre_adresse_mac = ttk.Entry(self.trame_filtres, width=48, name="adresse_mac")
         self.inpbox_filtre_adresse_mac.place(relx=0.23, rely=0.4)
         self.label_filtre_ip_source = ttk.Label(self.trame_filtres, text="IP(s) source:")
         self.label_filtre_ip_source.place(relx=0, rely=0.5)
-        self.inpbox_filtre_ip_source = ttk.Entry(self.trame_filtres, width=48)
+        self.inpbox_filtre_ip_source = ttk.Entry(self.trame_filtres, width=48, name="ip_source")
         self.inpbox_filtre_ip_source.place(relx=0.23, rely=0.5)
         self.label_filtre_ip_destination = ttk.Label(self.trame_filtres, text="IP(s) destination:")
         self.label_filtre_ip_destination.place(relx=0, rely=0.6)
-        self.inpbox_filtre_ip_destination = ttk.Entry(self.trame_filtres, width=48)
+        self.inpbox_filtre_ip_destination = ttk.Entry(self.trame_filtres, width=48, name="ip_destination")
         self.inpbox_filtre_ip_destination.place(relx=0.23, rely=0.6)
         self.label_filtre_protocole = ttk.Label(self.trame_filtres, text="Protocole(s):")
         self.label_filtre_protocole.place(relx=0, rely=0.7)
-        self.inpbox_filtre_protocole = ttk.Entry(self.trame_filtres, width=48)
+        self.inpbox_filtre_protocole = ttk.Entry(self.trame_filtres, width=48, name="protocole")
         self.inpbox_filtre_protocole.place(relx=0.23, rely=0.7)
         self.label_filtre_port_source = ttk.Label(self.trame_filtres, text="Port(s) source:")
         self.label_filtre_port_source.place(relx=0, rely=0.8)
-        self.inpbox_filtre_port_source = ttk.Entry(self.trame_filtres, width=48)
+        self.inpbox_filtre_port_source = ttk.Entry(self.trame_filtres, width=48, name="port_source")
         self.inpbox_filtre_port_source.place(relx=0.23, rely=0.8)
         self.label_filtre_port_destination = ttk.Label(self.trame_filtres, text="Port(s) destination:")
         self.label_filtre_port_destination.place(relx=0, rely=0.9)
-        self.inpbox_filtre_port_destination = ttk.Entry(self.trame_filtres, width=48)
+        self.inpbox_filtre_port_destination = ttk.Entry(self.trame_filtres, width=48, name="port_destination")
         self.inpbox_filtre_port_destination.place(relx=0.23, rely=0.9)
 
         # Controls of the "experimental" functions :
@@ -343,8 +343,7 @@ class Interface(object):
         label_stdout.pack()
         fenetre_stdout.mainloop()
 
-    @staticmethod
-    def init_dico_filtres():
+    def init_dico_filtres(self):
         """This function initializes of the variable dico_filtre.
 
         It's a dictionary whose keys correspond to the table columns, that's why it uses dico_colonnes.keys().
@@ -354,6 +353,12 @@ class Interface(object):
         dico_filtre_tmp = {}
         for index_dico in dico_colonnes.keys():
             dico_filtre_tmp[index_dico] = []
+        for index_trame in self.trame_filtres.winfo_children():
+            if isinstance(index_trame, ttk.Entry) and len(index_trame.get()) > 0:
+                nom_attribut = index_trame.winfo_name()
+                valeurs = (index_trame.get()).split(", ")
+                print(valeurs)
+                dico_filtre_tmp[nom_attribut].extend(valeurs)
         return dico_filtre_tmp
 
     def initialiser(self):
@@ -409,6 +414,7 @@ class Interface(object):
         cle = "".join(x for x, y in dico_colonnes.items() if y == self.combobox_tri.get())
         # v_inverser_tri is a boolean, its value is True if we want to reverse the sorting :
         v_inverser_tri = self.checkbox_var_tri.get()
+        self.dico_filtre = self.init_dico_filtres()
         liste_filtree_tri = self.filtrer_liste(lignes_du_log, self.dico_filtre)
         liste_limitee_tri = self.limiter_resultats(liste_filtree_tri)
         liste_triee = self.tri_liste(liste_limitee_tri, cle, v_inverser_tri)
