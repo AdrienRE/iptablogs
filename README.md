@@ -50,8 +50,11 @@ Then just click on "Filtrer et trier".
 Experimental (USE WITH CAUTION !) (not implemented yet) :
 
 In the right bottom corner is a frame in which you can find special functions.
+
 The button "Effacer le fichier de logs" simply deletes the current log file and restarts the rsyslog service.
+
 The button "Rediriger les logs dans /var/logs/iptables.logs" creates the 1-iptables.conf file if you didn't manually do it.
+
 The button "Ajouter les règles de logs iptables" adds the -j LOG rules with the appropriate parameters in your iptables.
 
 ## Contributing
