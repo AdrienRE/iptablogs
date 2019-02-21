@@ -9,7 +9,7 @@ It is currently in alpha state and some of its features don't work yet. Please r
 Due to limitations of the test environment, this program needs to be run as root, as the log file belongs to root. At the moment it also needs to be executed from the same folder as the log. I'm working to change that.
 
 ## Configuration
-To use this program, you need to do the followings :
+To use this program, you need to do the following :
 
 First, create a file in your /etc/rsyslog.d/ named for instance 1-iptables.conf.
 Inside, add the following line : 
