@@ -4,9 +4,8 @@ This is a short program written in Python as a student project. Its goal is to m
 # Disclaimer
 It's released under the GNU v3 licence. As stated in the licence file, this program is not covered by any warranty and I shall not be held responsible for any problem that may arise from its use.
 
-It is currently in alpha state and some of its features don't work. Please read the following instructions carefully :
-
 # Important notes : 
+It is currently in alpha state and some of its features don't work yet. Please read the following instructions carefully.
 Due to limitations of the test environment, this program needs to be run as root, as the log file belongs to root. At the moment it also needs to be executed from the same folder as the log. I'm working to change that.
 
 # Configuration
