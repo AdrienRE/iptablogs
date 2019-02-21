@@ -1,5 +1,5 @@
 # iptablogs
-This is a program written in Python as a student project. Its goal is to make it easier to filter and sort iptables logs contents on the filter table.
+This is a short program written in Python as a student project. Its goal is to make it easier to filter and sort iptables logs contents on the filter table.
 
 # Disclaimer
 It's released under the GNU v3 licence. As stated in the licence file, this program is not covered by any warranty and I shall not be held responsible for any problem that may arise from its use.
@@ -49,5 +49,5 @@ The button "Effacer le fichier de logs" simply deletes the current log file and 
 The button "Rediriger les logs dans /var/logs/iptables.logs" creates the 1-iptables.conf file if you didn't manually do it.
 The button "Ajouter les règles de logs iptables" adds the -j LOG rules with the appropriate parameters in your iptables.
 
-# Contributing
+# Contribute
 You can contribute in any way you want (add features, optimize, translate, etc...).
