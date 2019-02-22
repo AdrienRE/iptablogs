@@ -78,29 +78,34 @@ def appeler_fenetre_stdout(msg_stdout):
 
 
 class Interface(object):
+    """This class contains almost every attribute and method used in this program."""
+    # We want to catch every unpredicted error.
     try:
         def __init__(self):
-            # This list will hold the lines read from the log file. Because it's going to used in a method of this
-            # class and also because we don't want to use a global variable, it's registered here as an attribute of the
-            # Interface class object :
+            # The list liste_lignes_log_initiale will hold the lines read from the log file. Because it's going to
+            # used in a method of this class and also because we don't want to use a global variable, it's registered
+            # here as an attribute of the Interface class object :
             self.liste_lignes_log_initiale = []
+
+            # We also declare the dico_filtre attribute.
             self.dico_filtre = None
 
-            # Instancing the window :
+            # Building the window :
             self.fenetre = Tk()
             self.fenetre.title("iptablogs")
             self.fenetre.geometry("1280x800")
 
-            # Instancing the table :
+            # Building the table as a child of fenetre (the browse mode means read only) :
             self.tableau = ttk.Treeview(self.fenetre, height=23, selectmode="browse")
 
-            # Hiding the first column (it's a treeview control, but we don't use it as is) :
+            # Hiding the first column (it's a treeview control, but we don't really use it as is) :
             self.tableau["show"] = "headings"
 
-            # Defining columns we want to display :
+            # Defining columns we want to display (we use the keys from dico_colonnes):
             self.tableau["columns"] = dico_colonnes.keys()
 
-            # Setting up the columns names :
+            # Displaying the columns names (we browse dico_colonnes and display the formated names corresponding to
+            # each key). We use i as index :
             i = 0
             for cle_colonne_tab, valeur_colonne_tab in dico_colonnes.items():
                 self.tableau.column(i, width=120, minwidth=40, stretch=0)
@@ -126,8 +131,10 @@ class Interface(object):
             self.label_colonnes_a_afficher.place(relx=0.0001, rely=0.001)
             self.liste_colonnes_a_afficher = Listbox(self.trame_options, width=18, height=13, selectmode="extended")
             self.liste_colonnes_a_afficher.place(relx=0.0001, rely=0.09)
+            # We fill the listbox with the values from dico_colonnes :
             for valeur_colonne_a_afficher in dico_colonnes.values():
                 self.liste_colonnes_a_afficher.insert("end", valeur_colonne_a_afficher)
+            # This button triggers the method filrer_colonnes to narrow down the columns :
             self.bouton_filtre_colonnes_a_afficher = Button(self.trame_options, text="Appliquer",
                                                             command=self.filtrer_colonnes)
             self.bouton_filtre_colonnes_a_afficher.place(relx=0.0008, rely=0.85)
@@ -139,6 +146,7 @@ class Interface(object):
             self.label_nb_lignes_a_afficher2.place(relx=0.17, rely=0.09)
             self.inpbox_nb_lignes_a_afficher = ttk.Entry(self.trame_options, width=7)
             self.inpbox_nb_lignes_a_afficher.place(relx=0.12, rely=0.09)
+            # checkbox_dernier will get the value from "checkbox_dernieres_nb_lignes_a_afficher" as an integer.
             self.checkbox_dernier = IntVar()
             self.checkbox_dernieres_nb_lignes_a_afficher = ttk.Checkbutton(self.trame_options,
                                                                            text="Dernières lignes ?",
@@ -148,12 +156,18 @@ class Interface(object):
             # Sorting options :
             self.label_tri = ttk.Label(self.trame_options, text="Trier par :")
             self.label_tri.place(relx=0.12, rely=0.43)
+            # combobox_tri_valeur_selectionnee will get the selected value from the combobox "combobox_tri" to know
+            # which column the user wants to sort by :
             self.combobox_tri_valeur_selectionnee = StringVar()
+            # liste_attributs_tri contains every value from dico_colonnes except Date :
             self.liste_attributs_tri = [x for x in list(dico_colonnes.values()) if x != "Date"]
             self.combobox_tri = ttk.Combobox(self.trame_options, values=self.liste_attributs_tri, state="readonly",
                                              textvariable=self.combobox_tri_valeur_selectionnee, width=20)
+            # We set the combobox_tri default selected item as the line number :
             self.combobox_tri.current(0)
             self.combobox_tri.place(relx=0.12, rely=0.5)
+            # checkbox_var_tri will get the value from checkbox_inverser_tri to know if the user wants to reverse the
+            # sorting :
             self.checkbox_var_tri = IntVar()
             self.checkbox_inverser_tri = ttk.Checkbutton(self.trame_options, text="Inverser le tri",
                                                          variable=self.checkbox_var_tri)
@@ -161,11 +175,11 @@ class Interface(object):
             self.bouton_tri = Button(self.trame_options, text="Filtrer et trier", command=self.remplir_tableau)
             self.bouton_tri.place(relx=0.15, rely=0.85)
 
-            # Button to launch the first read of the log and display the list.
+            # Button to launch the first read of the log and display the list :
             self.bouton_initialiser = Button(self.trame_options, text="Initialiser", command=self.initialiser)
             self.bouton_initialiser.place(relx=0.08, rely=0.85)
 
-            # Options to filter the list :
+            # Options to filter the list (note : the input boxes names are the same as the dico_colonnes keys):
             self.label_filtres = ttk.Label(self.trame_options, text="Filtres :")
             self.label_filtres.place(relx=0.27, rely=0)
             self.trame_filtres = ttk.Frame(self.trame_options, borderwidth=1, relief="groove")
@@ -211,20 +225,22 @@ class Interface(object):
             self.inpbox_filtre_port_destination = ttk.Entry(self.trame_filtres, width=48, name="port_destination")
             self.inpbox_filtre_port_destination.place(relx=0.23, rely=0.9)
 
-            # Controls of the "experimental" functions :
+            # Controls of the "special" functions :
             self.label_fonctions_speciales = ttk.Label(self.trame_options,
-                                                          text="Fonctions spéciales : (LIRE LE README !!!)")
+                                                       text="Fonctions spéciales : (LIRE LE README !!!)")
             self.label_fonctions_speciales.place(relx=0.68, rely=0)
             self.trame_fonctions_speciales = ttk.Frame(self.trame_options, borderwidth=1, relief="groove")
             self.trame_fonctions_speciales.place(height=240, width=400, relx=0.68, rely=0.07)
+            # This button triggers the method effacer_fichier_log :
             self.bouton_effacer_log = Button(self.trame_fonctions_speciales, text="Effacer le fichier de logs",
                                              command=self.effacer_fichier_log)
             self.bouton_effacer_log.place(relx=0.08, rely=0.1)
+            # This button triggers the method rediriger_les_logs_iptables :
             self.bouton_rediriger_logs = Button(self.trame_fonctions_speciales,
                                                 text="Rediriger les logs dans /var/logs/iptables.log",
                                                 command=self.rediriger_les_logs_iptables)
-
             self.bouton_rediriger_logs.place(relx=0.08, rely=0.4)
+            # This button triggers the method ajouter_regles_log_iptables :
             self.bouton_ajouter_regles_iptables = Button(self.trame_fonctions_speciales,
                                                          text="Ajouter les règles de logs iptables",
                                                          command=self.ajouter_regles_log_iptables)
@@ -237,133 +253,134 @@ class Interface(object):
                 """Initialization of an object Lignelog.
 
                 It takes as arguments the line itself (str) and the line number (int).
-                It makes use of regular expressions to extract the data we're looking for in each string.
+                It makes use of regular expressions to extract the data we're looking for from each string.
+                If a regex fails it will return either an attribute error (if it's a NoneType) or an IndexError (if it
+                can't return the group).
+                As you'll notice, the attribute names are the same as the keys in dico_colonnes.
 
              """
-                numero_ligne = n_ligne
+                self.numero_ligne = n_ligne
                 try:
-                    date = search("^([A-Z][a-z]+\\s((\\s\\d)|(\\d{2})))(?= )", ligne_a_decouper).groups()[0]
+                    self.date = search("^([A-Z][a-z]+\\s((\\s\\d)|(\\d{2})))(?= )", ligne_a_decouper).groups()[0]
                 except (AttributeError, IndexError):
-                    date = ""
+                    self.date = ""
                 try:
-                    chaine = search("(?<= \\[netfilter-)(OUTPUT|INPUT|FORWARD)(?=\\] )", ligne_a_decouper).groups()[0]
-                except (AttributeError, IndexError):
-                    chaine = ""
-                try:
-                    heure = search("(?<= )(\\d{2}:\\d{2}:\\d{2})(?= )", ligne_a_decouper).groups()[0]
-                except (AttributeError, IndexError):
-                    heure = ""
-                try:
-                    timestamp = search("(?<= )(\\[\\s*\\d*\\.\\d*\\])(?= )", ligne_a_decouper).groups()[0]
-                except (AttributeError, IndexError):
-                    timestamp = ""
-                try:
-                    interface_in = search("(?<= IN=)(\\S*)(?= )", ligne_a_decouper).groups()[0]
-                except (AttributeError, IndexError):
-                    interface_in = ""
-                try:
-                    interface_out = search("(?<= OUT=)(\\S*)(?= )", ligne_a_decouper).groups()[0]
-                except (AttributeError, IndexError):
-                    interface_out = ""
-                try:
-                    adresse_mac = search("(?<= MAC=)((([a-z]|[0-9]){0,2}:){5,13}([a-z]|[0-9]){0,2})(?= )",
+                    self.chaine = search("(?<= \\[netfilter-)(OUTPUT|INPUT|FORWARD)(?=\\] )",
                                          ligne_a_decouper).groups()[0]
                 except (AttributeError, IndexError):
-                    adresse_mac = ""
+                    self.chaine = ""
                 try:
-                    ip_source = search("(?<= SRC=)((([0-9]{0,3}.){4}([0-9]{0,3}))?)(?= )", ligne_a_decouper).groups()[0]
+                    self.heure = search("(?<= )(\\d{2}:\\d{2}:\\d{2})(?= )", ligne_a_decouper).groups()[0]
                 except (AttributeError, IndexError):
-                    ip_source = ""
+                    self.heure = ""
                 try:
-                    ip_destination = search("(?<= DST=)((([0-9]{0,3}.){4}([0-9]{0,3}))?)(?= )",
+                    self.timestamp = search("(?<= )(\\[\\s*\\d*\\.\\d*\\])(?= )", ligne_a_decouper).groups()[0]
+                except (AttributeError, IndexError):
+                    self.timestamp = ""
+                try:
+                    self.interface_in = search("(?<= IN=)(\\S*)(?= )", ligne_a_decouper).groups()[0]
+                except (AttributeError, IndexError):
+                    self.interface_in = ""
+                try:
+                    self.interface_out = search("(?<= OUT=)(\\S*)(?= )", ligne_a_decouper).groups()[0]
+                except (AttributeError, IndexError):
+                    self.interface_out = ""
+                try:
+                    self.adresse_mac = search("(?<= MAC=)((([a-z]|[0-9]){0,2}:){5,13}([a-z]|[0-9]){0,2})(?= )",
+                                              ligne_a_decouper).groups()[0]
+                except (AttributeError, IndexError):
+                    self.adresse_mac = ""
+                try:
+                    self.ip_source = search("(?<= SRC=)((([0-9]{0,3}.){4}([0-9]{0,3}))?)(?= )",
                                             ligne_a_decouper).groups()[0]
                 except (AttributeError, IndexError):
-                    ip_destination = ""
+                    self.ip_source = ""
                 try:
-                    longueur_trame = int(search("(?<= LEN=)(\\d*)(?= )", ligne_a_decouper).groups()[0])
+                    self.ip_destination = search("(?<= DST=)((([0-9]{0,3}.){4}([0-9]{0,3}))?)(?= )",
+                                                 ligne_a_decouper).groups()[0]
                 except (AttributeError, IndexError):
-                    longueur_trame = ""
+                    self.ip_destination = ""
                 try:
-                    type_service = search("(?<= TOS=)(\\S*)(?= )", ligne_a_decouper).groups()[0]
+                    self.longueur_trame = int(search("(?<= LEN=)(\\d*)(?= )", ligne_a_decouper).groups()[0])
                 except (AttributeError, IndexError):
-                    type_service = ""
+                    self.longueur_trame = ""
                 try:
-                    priorite_tos = search("(?<= PREC=)(\\S*)(?= )", ligne_a_decouper).groups()[0]
+                    self.type_service = search("(?<= TOS=)(\\S*)(?= )", ligne_a_decouper).groups()[0]
                 except (AttributeError, IndexError):
-                    priorite_tos = ""
+                    self.type_service = ""
                 try:
-                    time_to_live = int(search("(?<= TTL=)(\\d*)(?= )", ligne_a_decouper).groups()[0])
+                    self.priorite_tos = search("(?<= PREC=)(\\S*)(?= )", ligne_a_decouper).groups()[0]
                 except (AttributeError, IndexError):
-                    time_to_live = ""
+                    self.priorite_tos = ""
                 try:
-                    id_paquet = int(search("(?<= ID=)(\\d*)(?= )", ligne_a_decouper).groups()[0])
+                    self.time_to_live = int(search("(?<= TTL=)(\\d*)(?= )", ligne_a_decouper).groups()[0])
                 except (AttributeError, IndexError):
-                    id_paquet = ""
+                    self.time_to_live = ""
                 try:
-                    flag_fragment = search("(?<= )(DF|CE|MF)(?= )", ligne_a_decouper).groups()[0]
+                    self.id_paquet = int(search("(?<= ID=)(\\d*)(?= )", ligne_a_decouper).groups()[0])
                 except (AttributeError, IndexError):
-                    flag_fragment = ""
+                    self.id_paquet = ""
                 try:
-                    protocole = search("(?<= PROTO=)(\\S*)(?= )", ligne_a_decouper).groups()[0]
+                    self.flag_fragment = search("(?<= )(DF|CE|MF)(?= )", ligne_a_decouper).groups()[0]
                 except (AttributeError, IndexError):
-                    protocole = ""
+                    self.flag_fragment = ""
                 try:
-                    port_source = int(search("(?<= SPT=)(\\d*)(?= )", ligne_a_decouper).groups()[0])
+                    self.protocole = search("(?<= PROTO=)(\\S*)(?= )", ligne_a_decouper).groups()[0]
                 except (AttributeError, IndexError):
-                    port_source = int()
+                    self.protocole = ""
                 try:
-                    port_destination = int(search("(?<= DPT=)(\\d*)(?= )", ligne_a_decouper).groups()[0])
+                    self.port_source = int(search("(?<= SPT=)(\\d*)(?= )", ligne_a_decouper).groups()[0])
                 except (AttributeError, IndexError):
-                    port_destination = int()
+                    self.port_source = int()
                 try:
-                    icmp_type = int(search("(?<= TYPE=)(\\d{0,2})(?= )", ligne_a_decouper).groups()[0])
+                    self.port_destination = int(search("(?<= DPT=)(\\d*)(?= )", ligne_a_decouper).groups()[0])
                 except (AttributeError, IndexError):
-                    icmp_type = int()
+                    self.port_destination = int()
                 try:
-                    icmp_code = int(search("(?<= CODE=)(\\d{0,2})(?= )", ligne_a_decouper).groups()[0])
+                    self.icmp_type = int(search("(?<= TYPE=)(\\d{0,2})(?= )", ligne_a_decouper).groups()[0])
                 except (AttributeError, IndexError):
-                    icmp_code = int()
+                    self.icmp_type = int()
                 try:
-                    icmp_id = int(search("(?: PROTO=ICMP.*)(?<= ID=)(\\d*)(?= )", ligne_a_decouper).groups()[0])
+                    self.icmp_code = int(search("(?<= CODE=)(\\d{0,2})(?= )", ligne_a_decouper).groups()[0])
                 except (AttributeError, IndexError):
-                    icmp_id = int()
+                    self.icmp_code = int()
                 try:
-                    icmp_n_sequence = int(search("(?<= SEQ=)(\\d*)(?= )", ligne_a_decouper).groups()[0])
+                    self.icmp_id = int(search("(?: PROTO=ICMP.*)(?<= ID=)(\\d*)(?= )", ligne_a_decouper).groups()[0])
                 except (AttributeError, IndexError):
-                    icmp_n_sequence = int()
+                    self.icmp_id = int()
                 try:
-                    longueur_datagramme = int(search("(?: PROTO=UDP.*)(?<= LEN=)(\\d*)(?= )",
-                                                     ligne_a_decouper).groups()[0])
+                    self.icmp_n_sequence = int(search("(?<= SEQ=)(\\d*)(?= )", ligne_a_decouper).groups()[0])
                 except (AttributeError, IndexError):
-                    longueur_datagramme = int()
+                    self.icmp_n_sequence = int()
                 try:
-                    fenetre_tcp = int(search("(?<= WINDOW=)(\\d*)(?= )", ligne_a_decouper).groups()[0])
+                    self.longueur_datagramme = int(search("(?: PROTO=UDP.*)(?<= LEN=)(\\d*)(?= )",
+                                                          ligne_a_decouper).groups()[0])
                 except (AttributeError, IndexError):
-                    fenetre_tcp = int()
+                    self.longueur_datagramme = int()
                 try:
-                    bits_reserves = search("(?<= RES=)(\\S*)(?= )", ligne_a_decouper).groups()[0]
+                    self.fenetre_tcp = int(search("(?<= WINDOW=)(\\d*)(?= )", ligne_a_decouper).groups()[0])
                 except (AttributeError, IndexError):
-                    bits_reserves = ""
+                    self.fenetre_tcp = int()
                 try:
-                    paquet_urgent = search("(?<= URGP=)[0|1](?= )", ligne_a_decouper).groups()[0]
+                    self.bits_reserves = search("(?<= RES=)(\\S*)(?= )", ligne_a_decouper).groups()[0]
                 except (AttributeError, IndexError):
-                    paquet_urgent = ""
+                    self.bits_reserves = ""
                 try:
-                    tcp_flag = search("(?<= )(((ACK).?|(PSH).?|(FIN).?|(RST).?|(SYN).?)+?)(?= )",
-                                      ligne_a_decouper).groups()[0]
+                    self.paquet_urgent = search("(?<= URGP=)[0|1](?= )", ligne_a_decouper).groups()[0]
                 except (AttributeError, IndexError):
-                    tcp_flag = ""
-
-                # Then we assign the values to the Lignelog object attributes.
-                # It makes use of dico_colonnes keys to browse the local variables and to name the object's attributes :
-                for cle_attribut in dico_colonnes.keys():
-                    valeur = locals()[cle_attribut]
-                    setattr(self, cle_attribut, valeur)
+                    self.paquet_urgent = ""
+                try:
+                    self.tcp_flag = search("(?<= )(((ACK).?|(PSH).?|(FIN).?|(RST).?|(SYN).?)+?)(?= )",
+                                           ligne_a_decouper).groups()[0]
+                except (AttributeError, IndexError):
+                    self.tcp_flag = ""
 
         class Lignelimitee:
             """The objects from this class have similar attributes to those of Lignelog.
 
-            It basically recreates the lines after all filters and sorting have been applied.
+            It basically recreates the lines after all filters and sorting have been applied. We can't use the class
+            Lignelog because its __init__ would search for regular expressions again in a string. Instead we browse the
+            dictionary dico_colonnes to assign a value to each corresponding attribute of Lignelimitee.
 
             """
 
@@ -374,43 +391,64 @@ class Interface(object):
                     index_dico_attributs += 1
 
         def init_dico_filtres(self):
-            """This method initializes of the variable dico_filtre.
+            """This method initializes the variable dico_filtre_tmp.
 
             It's a dictionary whose keys correspond to the table columns, that's why it uses dico_colonnes.keys().
             To each key corresponds a value (list) that will be used to filter the lines that will be displayed.
 
             """
+            # Once again, we rely on dico_colonnes. We create a dictionary with the same keys as dico_colonnes, and for
+            # each key an empty list :
             dico_filtre_tmp = {}
             for index_dico in dico_colonnes.keys():
                 dico_filtre_tmp[index_dico] = []
+            # Then we browse the frame containing the filters input boxes :
             for index_trame in self.trame_filtres.winfo_children():
                 valeurs = None
+                # We check if the object is a ttk.Entry class object and if it's not empty :
                 if isinstance(index_trame, ttk.Entry) and len(index_trame.get()) > 0:
+                    # We store its name in nom_attribut :
                     nom_attribut = index_trame.winfo_name()
+                    # If the input box names are "port_source" or "port_destination", we convert them into integers
+                    # before adding them to the list "valeurs".
                     if nom_attribut == ("port_source" or "port_destination"):
                         try:
                             valeurs = [int(nombre) for nombre in ((index_trame.get()).split(", "))]
                         except ValueError as erreur_valeur:
+                            # If we try to convert an alpha character into an integer, we call the function
+                            # appeler_fenetre_erreur to warn the user that the entry is incorrect.
                             appeler_fenetre_erreur(erreur_valeur,
                                                    "Le port source ou destination doivent être des valeurs numériques")
                     else:
+                        # Same as above, except we don't convert into integer this time.
                         valeurs = (index_trame.get()).split(", ")
                     if valeurs is not None:
+                        # If valeurs isn't empty, we add its content to the value corresponding to the correct key in
+                        # dico_filtre_tmp (as a reminder, each key is associated with a list, that's why we use
+                        # extend().
                         dico_filtre_tmp[nom_attribut].extend(valeurs)
+            # We then return the dictionary dico_filtre_tmp
             return dico_filtre_tmp
 
         def initialiser(self):
             """This method reads the log file then fills the table.
 
-            It calls the methods lire_fichier_log() and remplir_tableau(). This is necessary if we don't want to have
-            to read the log file again each time we want to filter or sort the results.
+            It calls the methods lire_fichier_log() to fill the list "liste_lignes_log_initiale", that one will be used
+            to sort and filter the results.
+            It then calls remplir_tableau() to fill the table.
+            initialiser can be used several times to read again the log file but it's only mandatory once to be able to
+            sort and filter the results.
 
             """
             self.liste_lignes_log_initiale = self.lire_fichier_log()
             self.remplir_tableau()
 
         def filtrer_colonnes(self):
-            """The purpose of this method is to narrow down the columns that are displayed."""
+            """The purpose of this method is to narrow down the columns that are displayed.
+
+            It gets the column names selected in the listbox "list_colonnes_a_afficher".
+
+            """
             self.tableau["displaycolumns"] = self.liste_colonnes_a_afficher.curselection()
 
         def lire_fichier_log(self):
@@ -424,8 +462,10 @@ class Interface(object):
                         num_ligne += 1
                         ligne_coupee = self.Lignelog(ligne, num_ligne)
                         liste_lignes.append(ligne_coupee)
+            # If the file is not found, we warn the use and advise him to read the readme.
             except FileNotFoundError as erreur:
                 appeler_fenetre_erreur(erreur, "Fichier log introuvable, veuillez lire le README.")
+            # It then returns the list of objects Lignelog :
             return liste_lignes
 
         def remplir_tableau(self):
@@ -434,31 +474,39 @@ class Interface(object):
             It calls the method trier_resultats to gather the list of lines to insert.
 
             """
-            try:
-                if len(self.liste_lignes_log_initiale) > 0:
-                    self.tableau.delete(*self.tableau.get_children())
-                    liste_triee_a_inserer_dans_tableau = self.trier_resultats(self.liste_lignes_log_initiale)
-                    for ligne_liste_triee in liste_triee_a_inserer_dans_tableau:
-                        self.tableau.insert("", "end", values=(list(ligne_liste_triee.__dict__.values())))
-                else:
-                    appeler_fenetre_erreur("", "Rien à trier, veuillez d'abord cliquer sur 'Initialiser'.")
-
-            except NameError as err_remplir_tableau:
-                appeler_fenetre_erreur(err_remplir_tableau, "Liste non initialisée, veuillez cliquer sur Initialiser.")
+            # First we check if the list of log lines is not empty :
+            if len(self.liste_lignes_log_initiale) > 0:
+                # We delete the contents of the table
+                self.tableau.delete(*self.tableau.get_children())
+                # We call the function trier_resultats. It returns a sorted and filtered list :
+                liste_triee_a_inserer_dans_tableau = self.trier_resultats(self.liste_lignes_log_initiale)
+                # For each entry in the list, we add its values in succession :
+                for ligne_liste_triee in liste_triee_a_inserer_dans_tableau:
+                    self.tableau.insert("", "end", values=(list(ligne_liste_triee.__dict__.values())))
+            else:
+                # If the list is empty, we advise the user to click on "Initialiser".
+                appeler_fenetre_erreur("", "Rien à trier, veuillez d'abord cliquer sur 'Initialiser'.")
 
         def trier_resultats(self, lignes_du_log):
-            """This method is invoked by the function remplir_tableau().
+            """This method is invoked by the method remplir_tableau().
 
             Its purpose is mainly to trigger other functions to sort and filter results.
 
             """
-            # cle contains the columns that we want to display in our table :
+            # cle is the column that we want to sort our table by. Given that combobox_tri displays formated names, we
+            # use a condition to get the key name corresponding to the formated name) :
             cle = "".join(x for x, y in dico_colonnes.items() if y == self.combobox_tri.get())
-            # v_inverser_tri is a boolean, its value is True if we want to reverse the sorting :
+            # v_inverser_tri is a boolean, its value is True if the user checked the box to reverse the sorting :
             v_inverser_tri = self.checkbox_var_tri.get()
+            # We call init_dico_filtres to return a dictionary with the filters the user created :
             self.dico_filtre = self.init_dico_filtres()
+            # We call the method filtrer_liste with as arguments the initial list of lines from the log file and the
+            # filters the user specified in the form of a dictionary. It then return a filtered list :
             liste_filtree_tri = self.filtrer_liste(lignes_du_log, self.dico_filtre)
+            # Next, we call the method limiter_resultats to narrow down the number of lines we want to display :
             liste_limitee_tri = self.limiter_resultats(liste_filtree_tri)
+            # Finally, we call the method tri_list to sort the lines and return liste_triee that will be used to fill
+            # the table :
             liste_triee = self.tri_liste(liste_limitee_tri, cle, v_inverser_tri)
             return liste_triee
 
@@ -471,16 +519,24 @@ class Interface(object):
             list liste_filtree_generee that is returned.
 
             """
+            # The list is created empty :
             liste_filtree_generee = []
+            # We take each line in liste_a_filtrer :
             for ligne_a_filtrer in liste_a_filtrer:
                 present = True
                 for cle_dico in dico_colonnes.keys():
+                    # For each key in dico_colonnes, we get the corresponding value in liste_filtres :
                     attribut_filtre = liste_filtres[cle_dico]
+                    # Then we check if the value of the attribute of the line is in the list attribut_filtre :
                     attribut_ligne = getattr(ligne_a_filtrer, cle_dico)
                     if len(attribut_filtre) > 0 and attribut_ligne not in attribut_filtre:
+                        # If the value is not empty but doesn't match, the boolean "present" becomes False.
                         present = False
+                # If none of the matching tests set the "present" boolean to False, then the line is added to
+                # liste_filtree_generee :
                 if present is True:
                     liste_filtree_generee.append(ligne_a_filtrer)
+            # We then return the filtered list :
             return liste_filtree_generee
 
         def limiter_resultats(self, liste_filtree):
@@ -490,15 +546,20 @@ class Interface(object):
 
             """
             # We fetch the number of elements to display. If the input box is empty or if the number is bigger than the
-            # number of elements in the list (the number of lines in the log file), then we keep all of them.
-            # This number is stored in the variable nombre_elements_a_afficher.
+            # number of elements in the list (the number of lines in the log file, nombre_elements_dans_liste), then we
+            # keep all of them. This number is stored in the variable nombre_elements_a_afficher.
             nombre_elements_dans_liste = len(liste_filtree)
             liste_limitee = []
             try:
-                nombre_elements_a_afficher = int(self.inpbox_nb_lignes_a_afficher.get()) \
-                    if (int(self.inpbox_nb_lignes_a_afficher.get()) <= nombre_elements_dans_liste) \
-                    else nombre_elements_dans_liste
-            except ValueError:
+                entree_nb_elements_a_afficher = self.inpbox_nb_lignes_a_afficher.get()
+                if len(entree_nb_elements_a_afficher) > 0 and int(entree_nb_elements_a_afficher) <= \
+                        nombre_elements_dans_liste:
+                    nombre_elements_a_afficher = int(entree_nb_elements_a_afficher)
+                else:
+                    nombre_elements_a_afficher = nombre_elements_dans_liste
+            except ValueError as err_nombre_lignes:
+                # If the user has entered an invalid character, we display all of the lines but warn the user :
+                appeler_fenetre_erreur(err_nombre_lignes, "Vous avez saisi un nombre lignes incorrect !")
                 nombre_elements_a_afficher = nombre_elements_dans_liste
             nombre_elements_affiches = 0
             # We check the status of the checkbox "checkbox_dernier". If it's checked, we create a list of X lasts lines
