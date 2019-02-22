@@ -54,7 +54,7 @@ e.g. : "filter1, filter2, filter3" etc...
 or "filter1, , filter2" (if you want to use blank filters)
 Then just click on "Filtrer et trier".
 
-Sepcial functions (USE WITH CAUTION !) :
+Special functions (USE WITH CAUTION !) :
 
 In the right bottom corner is a frame in which you can find special functions.
 
@@ -66,3 +66,6 @@ The button "Ajouter les règles de logs iptables" adds the -j LOG rules with the
 
 ## Contributing
 You can contribute in any way you want (add features, optimize, translate, etc...).
+
+## Contact
+For more informations, feel free to contact me at undercover1[at]live.fr
