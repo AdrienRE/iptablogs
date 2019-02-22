@@ -7,8 +7,8 @@ from re import search
 from os import getuid
 from subprocess import getoutput
 
-# dico_colonnes is a dictionary containing for each "variable-style name", the corresponding "full name". It is used to
-# display column names but also to browse attributes of the lines :
+# dico_colonnes is a dictionary containing for each column of the table, the variable name and the corresponding
+# formated name. It is used to display column names but also to browse the attributes of the lines :
 
 dico_colonnes = {
     "numero_ligne": "N° ligne",
