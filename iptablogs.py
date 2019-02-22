@@ -261,14 +261,14 @@ class Interface(object):
              """
                 self.numero_ligne = n_ligne
                 try:
-                    self.date = search("^([A-Z][a-z]+\\s((\\s\\d)|(\\d{2})))(?= )", ligne_a_decouper).groups()[0]
-                except (AttributeError, IndexError):
-                    self.date = ""
-                try:
                     self.chaine = search("(?<= \\[netfilter-)(OUTPUT|INPUT|FORWARD)(?=\\] )",
                                          ligne_a_decouper).groups()[0]
                 except (AttributeError, IndexError):
                     self.chaine = ""
+                try:
+                    self.date = search("^([A-Z][a-z]+\\s((\\s\\d)|(\\d{2})))(?= )", ligne_a_decouper).groups()[0]
+                except (AttributeError, IndexError):
+                    self.date = ""
                 try:
                     self.heure = search("(?<= )(\\d{2}:\\d{2}:\\d{2})(?= )", ligne_a_decouper).groups()[0]
                 except (AttributeError, IndexError):
@@ -592,16 +592,21 @@ class Interface(object):
         def ajouter_regles_log_iptables():
             """This method adds iptables rules to log with the needed prefixes.
 
-            If one of the commands returns an error, it is displayed using appeler_genetre_sdtout method.
+            If one of the commands returns an error, it is displayed using appeler_fenetre_stdout method.
 
             """
-            sortie_std = getoutput("iptables -A INPUT -j LOG --log-prefix='[netfilter-INPUT] '")
-            sortie_std += getoutput("iptables -A OUTPUT -j LOG --log-prefix='[netfilter-OUTPUT] '")
-            sortie_std += getoutput("iptables -A FORWARD -j LOG --log-prefix='[netfilter-FOWARD] '")
-            if sortie_std != "":
+            sortie_std = ""
+            # We check if the log rule exist in each chain. If not, we add the log rule to the chain.
+            for chaine in ["INPUT", "OUTPUT", "FORWARD"]:
+                chaine_a_executer = "iptables -nL {0} --line-numbers | grep \"\\[netfilter-{0}\\]\"".format(chaine)
+                if not getoutput(chaine_a_executer):
+                    sortie_std += getoutput("iptables -A {0} -j LOG"
+                                            " --log-prefix=\"[netfilter-{0}] \" ".format(chaine))
+            # We instantiate a popup to display the result :
+            if sortie_std:
                 appeler_fenetre_stdout(sortie_std)
             else:
-                appeler_fenetre_stdout("Commande exécutée avec succès")
+                appeler_fenetre_stdout("Règles ajoutées avec succès")
 
         @staticmethod
         def rediriger_les_logs_iptables():
