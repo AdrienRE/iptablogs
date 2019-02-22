@@ -188,7 +188,7 @@ class Interface(object):
                                                      text="Ajouter les règles de logs iptables",
                                                      command=self.appeler_fenetre_erreur)
         self.bouton_ajouter_regles_iptables.place(relx=0.08, rely=0.7)
-        self.dico_filtre = self.init_dico_filtres()
+        self.dico_filtre = None
 
     class Lignelog:
         """Classe representing a line in the logs."""
@@ -354,11 +354,19 @@ class Interface(object):
         for index_dico in dico_colonnes.keys():
             dico_filtre_tmp[index_dico] = []
         for index_trame in self.trame_filtres.winfo_children():
+            valeurs = None
             if isinstance(index_trame, ttk.Entry) and len(index_trame.get()) > 0:
                 nom_attribut = index_trame.winfo_name()
-                valeurs = (index_trame.get()).split(", ")
-                print(valeurs)
-                dico_filtre_tmp[nom_attribut].extend(valeurs)
+                if nom_attribut == "port_source" or "port_destination":
+                    try:
+                        valeurs = [int(nombre) for nombre in ((index_trame.get()).split(", "))]
+                    except ValueError as e:
+                        self.appeler_fenetre_erreur(e,
+                                                    "Le port source ou destination doivent être des vakeurs numériques")
+                else:
+                    valeurs = (index_trame.get()).split(", ")
+                if valeurs is not None:
+                    dico_filtre_tmp[nom_attribut].extend(valeurs)
         return dico_filtre_tmp
 
     def initialiser(self):
