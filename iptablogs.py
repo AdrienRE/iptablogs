@@ -5,6 +5,7 @@ from tkinter import *
 from tkinter import ttk
 from re import search
 from os import getuid
+from subprocess import getoutput
 
 # dico_colonnes is a dictionary containing for each "variable-style name", the corresponding "full name". It is used to
 # display column names but also to browse attributes of the lines :
@@ -42,6 +43,7 @@ dico_colonnes = {
 
 
 def verif_sudo():
+    """This function checks if the program is run with root privileges"""
     if getuid() != 0:
         print("Ce programme nécessite d'être exécuté avec les droits root.")
     else:
@@ -215,16 +217,16 @@ class Interface(object):
             self.trame_actions_experimentales = ttk.Frame(self.trame_options, borderwidth=1, relief="groove")
             self.trame_actions_experimentales.place(height=240, width=400, relx=0.68, rely=0.07)
             self.bouton_effacer_log = Button(self.trame_actions_experimentales, text="Effacer le fichier de logs",
-                                             command=self.initialiser)
+                                             command=self.effacer_fichier_log)
             self.bouton_effacer_log.place(relx=0.08, rely=0.1)
             self.bouton_rediriger_logs = Button(self.trame_actions_experimentales,
-                                                text="Rediriger les logs dans /var/logs/iptables.logs",
-                                                command=self.initialiser)
+                                                text="Rediriger les logs dans /var/logs/iptables.log",
+                                                command=self.rediriger_les_logs_iptables)
 
             self.bouton_rediriger_logs.place(relx=0.08, rely=0.4)
             self.bouton_ajouter_regles_iptables = Button(self.trame_actions_experimentales,
                                                          text="Ajouter les règles de logs iptables",
-                                                         command=appeler_fenetre_erreur)
+                                                         command=self.ajouter_regles_log_iptables)
             self.bouton_ajouter_regles_iptables.place(relx=0.08, rely=0.7)
             self.dico_filtre = None
 
@@ -358,6 +360,19 @@ class Interface(object):
                     valeur = locals()[cle_attribut]
                     setattr(self, cle_attribut, valeur)
 
+        class Lignelimitee:
+            """The objects from this class have similar attributes to those of Lignelog.
+
+            It basically recreates the lines after all filters and sorting have been applied.
+
+            """
+
+            def __init__(self, liste_arguments):
+                index_dico_attributs = 0
+                for cle_dico_attribut in dico_colonnes.keys():
+                    setattr(self, cle_dico_attribut, liste_arguments[index_dico_attributs])
+                    index_dico_attributs += 1
+
         def init_dico_filtres(self):
             """This function initializes of the variable dico_filtre.
 
@@ -402,7 +417,7 @@ class Interface(object):
             """This function reads the log file and returns a list of objects Lignelog."""
             liste_lignes = []
             try:
-                with open("iptables.log", "r") as fichier:
+                with open("/var/log/iptables.log", "r") as fichier:
                     lignes = fichier.readlines()
                     num_ligne = 0
                     for ligne in lignes:
@@ -508,22 +523,42 @@ class Interface(object):
             liste_a_trier.sort(key=lambda ligne_tri: getattr(ligne_tri, colonne_tri), reverse=inverse)
             return liste_a_trier
 
-        class Lignelimitee:
-            """The objects from this class have similar attributes to those of Lignelog.
+        @staticmethod
+        def ajouter_regles_log_iptables():
+            """This functions adds iptables rules to log with the needed prefixes.
 
-            It basically recreates the lines after all filters and sorting have been applied.
+            If one of the commands returns an error, it is displayed using appeler_genetre_sdtout method.
 
             """
+            sortie_std = getoutput("iptables -A INPUT -j LOG --log-prefix='[netfilter-INPUT] '")
+            sortie_std += getoutput("iptables -A OUTPUT -j LOG --log-prefix='[netfilter-OUTPUT] '")
+            sortie_std += getoutput("iptables -A FORWARD -j LOG --log-prefix='[netfilter-FOWARD] '")
+            if sortie_std != "":
+                appeler_fenetre_stdout(sortie_std)
+            else:
+                appeler_fenetre_stdout("Commande exécutée avec succès")
 
-            def __init__(self, liste_arguments):
-                index_dico_attributs = 0
-                for cle_dico_attribut in dico_colonnes.keys():
-                    setattr(self, cle_dico_attribut, liste_arguments[index_dico_attributs])
-                    index_dico_attributs += 1
+        @staticmethod
+        def rediriger_les_logs_iptables():
+            sortie_std = getoutput(
+                "echo ':msg,contains,\"[netfilter-\" /var/log/iptables.log' > /etc/rsyslog.d/1-iptables.conf")
+            sortie_std += getoutput("service rsyslog restart")
+            if sortie_std != "":
+                appeler_fenetre_stdout(sortie_std)
+            else:
+                appeler_fenetre_stdout("Commande exécutée avec succès")
+
+        @staticmethod
+        def effacer_fichier_log():
+            sortie_std = getoutput("rm /var/log/iptables.log")
+            sortie_std += getoutput("service rsyslog restart")
+            if sortie_std != "":
+                appeler_fenetre_stdout(sortie_std)
+            else:
+                appeler_fenetre_stdout("Commande exécutée avec succès")
+
     except Exception as err_generale:
         appeler_fenetre_erreur(err_generale)
 
 
 verif_sudo()
-
-
