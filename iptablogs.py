@@ -374,7 +374,7 @@ class Interface(object):
                     index_dico_attributs += 1
 
         def init_dico_filtres(self):
-            """This function initializes of the variable dico_filtre.
+            """This method initializes of the variable dico_filtre.
 
             It's a dictionary whose keys correspond to the table columns, that's why it uses dico_colonnes.keys().
             Each value is a list used to filter the lines that will be displayed.
@@ -400,9 +400,9 @@ class Interface(object):
             return dico_filtre_tmp
 
         def initialiser(self):
-            """This function reads the log file then fills the table.
+            """This method reads the log file then fills the table.
 
-            It calls the functions lire_fichier_log() and remplir_tableau(). This is necessary if we don't want to have
+            It calls the methods lire_fichier_log() and remplir_tableau(). This is necessary if we don't want to have
             to read the log file again each time we want to filter or sort the results.
 
             """
@@ -410,11 +410,11 @@ class Interface(object):
             self.remplir_tableau()
 
         def filtrer_colonnes(self):
-            """The purpose of this function is to narrow down the columns that are displayed."""
+            """The purpose of this method is to narrow down the columns that are displayed."""
             self.tableau["displaycolumns"] = self.liste_colonnes_a_afficher.curselection()
 
         def lire_fichier_log(self):
-            """This function reads the log file and returns a list of objects Lignelog."""
+            """This method reads the log file and returns a list of objects Lignelog."""
             liste_lignes = []
             try:
                 with open("/var/log/iptables.log", "r") as fichier:
@@ -429,9 +429,9 @@ class Interface(object):
             return liste_lignes
 
         def remplir_tableau(self):
-            """This function clears the treeview object "tableau", then inserts the new fresh lines in it.
+            """This method clears the treeview object "tableau", then inserts the new fresh lines in it.
 
-            It calls the funtion trier_resultats to gather the list of lines to insert.
+            It calls the method trier_resultats to gather the list of lines to insert.
 
             """
             try:
@@ -443,7 +443,7 @@ class Interface(object):
                 appeler_fenetre_erreur(err_remplir_tableau, "Liste non initialisée, veuillez cliquer sur Initialiser.")
 
         def trier_resultats(self, lignes_du_log):
-            """This function is invoked by the function remplir_tableau().
+            """This method is invoked by the function remplir_tableau().
 
             Its purpose is mainly to trigger other functions to sort and filter results.
 
@@ -460,7 +460,7 @@ class Interface(object):
 
         @staticmethod
         def filtrer_liste(liste_a_filtrer, liste_filtres):
-            """This function's purpose is to filter the results.
+            """This method's purpose is to filter the results.
 
             It takes as arguments the list of lines to filter and the list of filters.
             It then compares each line "attribute" to the filters' ones. If it finds a match, the line is added to the
@@ -480,7 +480,7 @@ class Interface(object):
             return liste_filtree_generee
 
         def limiter_resultats(self, liste_filtree):
-            """This function limits the number of lines to display in the table.
+            """This method limits the number of lines to display in the table.
 
             It takes as argument the list of lines to narrow down and returns a list limited by the specified number.
 
@@ -514,7 +514,7 @@ class Interface(object):
 
         @staticmethod
         def tri_liste(liste_a_trier, colonne_tri, inverse):
-            """This function sorts the provided list.
+            """This method sorts the provided list.
 
             It takes as arguments the list of lines to sort, the column to sort by (str), and
             a boolean to reverse the sorting if needed.
@@ -525,7 +525,7 @@ class Interface(object):
 
         @staticmethod
         def ajouter_regles_log_iptables():
-            """This functions adds iptables rules to log with the needed prefixes.
+            """This method adds iptables rules to log with the needed prefixes.
 
             If one of the commands returns an error, it is displayed using appeler_genetre_sdtout method.
 
@@ -540,6 +540,12 @@ class Interface(object):
 
         @staticmethod
         def rediriger_les_logs_iptables():
+            """This method allows the logs to be redirected to var/log/iptables.log
+
+            It creates a file in /etc/rsyslog.d/ to filter the kernel logs and redirects every line containing
+            "[netfilter-"
+
+            """
             sortie_std = getoutput(
                 "echo ':msg,contains,\"[netfilter-\" /var/log/iptables.log' > /etc/rsyslog.d/1-iptables.conf")
             sortie_std += getoutput("service rsyslog restart")
@@ -550,6 +556,7 @@ class Interface(object):
 
         @staticmethod
         def effacer_fichier_log():
+            """This method simply removes the log file and restarts the rsyslog service."""
             sortie_std = getoutput("rm /var/log/iptables.log")
             sortie_std += getoutput("service rsyslog restart")
             if sortie_std != "":
