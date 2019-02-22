@@ -84,6 +84,7 @@ class Interface(object):
             # class and also because we don't want to use a global variable, it's registered here as an attribute of the
             # Interface class object :
             self.liste_lignes_log_initiale = []
+            self.dico_filtre = None
 
             # Instancing the window :
             self.fenetre = Tk()
@@ -228,7 +229,6 @@ class Interface(object):
                                                          text="Ajouter les règles de logs iptables",
                                                          command=self.ajouter_regles_log_iptables)
             self.bouton_ajouter_regles_iptables.place(relx=0.08, rely=0.7)
-            self.dico_filtre = None
 
         class Lignelog:
             """Classe representing a line in the logs."""
@@ -355,7 +355,7 @@ class Interface(object):
                     tcp_flag = ""
 
                 # Then we assign the values to the Lignelog object attributes.
-                # It makes use of dico_colonnes keys to browse the local variables and to name the object attributes :
+                # It makes use of dico_colonnes keys to browse the local variables and to name the object's attributes :
                 for cle_attribut in dico_colonnes.keys():
                     valeur = locals()[cle_attribut]
                     setattr(self, cle_attribut, valeur)
@@ -377,7 +377,7 @@ class Interface(object):
             """This method initializes of the variable dico_filtre.
 
             It's a dictionary whose keys correspond to the table columns, that's why it uses dico_colonnes.keys().
-            Each value is a list used to filter the lines that will be displayed.
+            To each key corresponds a value (list) that will be used to filter the lines that will be displayed.
 
             """
             dico_filtre_tmp = {}
@@ -435,10 +435,14 @@ class Interface(object):
 
             """
             try:
-                self.tableau.delete(*self.tableau.get_children())
-                liste_triee_a_inserer_dans_tableau = self.trier_resultats(self.liste_lignes_log_initiale)
-                for ligne_liste_triee in liste_triee_a_inserer_dans_tableau:
-                    self.tableau.insert("", "end", values=(list(ligne_liste_triee.__dict__.values())))
+                if len(self.liste_lignes_log_initiale) > 0:
+                    self.tableau.delete(*self.tableau.get_children())
+                    liste_triee_a_inserer_dans_tableau = self.trier_resultats(self.liste_lignes_log_initiale)
+                    for ligne_liste_triee in liste_triee_a_inserer_dans_tableau:
+                        self.tableau.insert("", "end", values=(list(ligne_liste_triee.__dict__.values())))
+                else:
+                    appeler_fenetre_erreur("", "Rien à trier, veuillez d'abord cliquer sur 'Initialiser'.")
+
             except NameError as err_remplir_tableau:
                 appeler_fenetre_erreur(err_remplir_tableau, "Liste non initialisée, veuillez cliquer sur Initialiser.")
 
