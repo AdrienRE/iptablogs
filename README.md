@@ -1,15 +1,23 @@
 # iptablogs
-iptablogs is a short program written in Python as a student project. Its goal is to make it easier to filter and sort the logs from  iptables, specifically on the Filter table.
+iptablogs is a short program written in Python 3.7.2 as a student project. Its goal is to make it easier to filter and sort the logs from  iptables, specifically on the Filter table.
 
 ## Disclaimer
 This program is released under the GNU v3 licence. As stated in the licence file, this program is not covered by any warranty and I shall not be held responsible for any problem that may arise from its use.
+Please read the LICENCE for more details.
 
 ## Important notes
-It is currently in alpha state and some of its features don't work yet. Please read the following instructions carefully.
-Due to limitations of the test environment, this program needs to be run as root, as the log file belongs to root. At the moment it also needs to be executed from the same folder as the log. I'm working to change that.
+Please read the following instructions carefully.
+This program needs to be run as root, as the log file belongs to root and some of the functions need to be run as root.
 
 ## Configuration
-To use this program, you need to do the following :
+Before using this program, you need to do the following :
+
+=>The easy way : 
+
+Launch the program, click on the buttons "Rediriger les logs dans /var/logs/iptables.log" and "Ajouter les règles de logs iptables". 
+You can now start using it.
+
+=>The less easy way :
 
 First, create a file in your /etc/rsyslog.d/ named for instance 1-iptables.conf.
 Inside, add the following line : 
@@ -23,11 +31,9 @@ Finally, execute the following commands to add iptables rules to each chain INPU
     sudo iptables -A INPUT -j LOG --log-prefix="[netfilter-INPUT] "
     sudo iptables -A OUTPUT -j LOG --log-prefix="[netfilter-OUTPUT] "
     sudo iptables -A FORWARD -j LOG --log-prefix="[netfilter-FORWARD] "
-  
-Note : the above configurations can be achieved from within the program but don't have failswitches (if you click twice on the button, it will add the log rules TWICE !).
 
-## Usage
-Read the log file :
+## How to use this program ?
+Filling the table :
 
 Once you have launched the program, click on the button "Initialiser". If you correctly followed the previous steps, it will read the log file and display the logs in the table. You'll have to click on that button again if you want to refresh the table as well.
 
@@ -41,13 +47,14 @@ Under the label "Afficher" is an entry box in which you can indicate how many li
 Just above "Trier par" is a drop-down list you can use to select how you want to sort the list. You can also check the box "Inverser le tri" if you want to reverse the sorting.
 Once you're done, click on "Filtrer et trier".
 
-Filter the lines (not implemented yet) : 
+Filter the lines : 
 
 In the middle of the screen, you'll find the "Filtres" frame in which you can add filters. You have to separate each filter by a comma followed by a space (or it just won't work). 
-eg : filter1, filter2, filter3, etc...
+e.g. : "filter1, filter2, filter3" etc...
+or "filter1, , filter2" (if you want to use blank filters)
 Then just click on "Filtrer et trier".
 
-Experimental (USE WITH CAUTION !) (not implemented yet) :
+Sepcial functions (USE WITH CAUTION !) :
 
 In the right bottom corner is a frame in which you can find special functions.
 
