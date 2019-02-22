@@ -212,20 +212,20 @@ class Interface(object):
             self.inpbox_filtre_port_destination.place(relx=0.23, rely=0.9)
 
             # Controls of the "experimental" functions :
-            self.label_actions_experimentales = ttk.Label(self.trame_options,
-                                                          text="EXPERIMENTAL : (LIRE LE README !!!)")
-            self.label_actions_experimentales.place(relx=0.68, rely=0)
-            self.trame_actions_experimentales = ttk.Frame(self.trame_options, borderwidth=1, relief="groove")
-            self.trame_actions_experimentales.place(height=240, width=400, relx=0.68, rely=0.07)
-            self.bouton_effacer_log = Button(self.trame_actions_experimentales, text="Effacer le fichier de logs",
+            self.label_fonctions_speciales = ttk.Label(self.trame_options,
+                                                          text="Fonctions spéciales : (LIRE LE README !!!)")
+            self.label_fonctions_speciales.place(relx=0.68, rely=0)
+            self.trame_fonctions_speciales = ttk.Frame(self.trame_options, borderwidth=1, relief="groove")
+            self.trame_fonctions_speciales.place(height=240, width=400, relx=0.68, rely=0.07)
+            self.bouton_effacer_log = Button(self.trame_fonctions_speciales, text="Effacer le fichier de logs",
                                              command=self.effacer_fichier_log)
             self.bouton_effacer_log.place(relx=0.08, rely=0.1)
-            self.bouton_rediriger_logs = Button(self.trame_actions_experimentales,
+            self.bouton_rediriger_logs = Button(self.trame_fonctions_speciales,
                                                 text="Rediriger les logs dans /var/logs/iptables.log",
                                                 command=self.rediriger_les_logs_iptables)
 
             self.bouton_rediriger_logs.place(relx=0.08, rely=0.4)
-            self.bouton_ajouter_regles_iptables = Button(self.trame_actions_experimentales,
+            self.bouton_ajouter_regles_iptables = Button(self.trame_fonctions_speciales,
                                                          text="Ajouter les règles de logs iptables",
                                                          command=self.ajouter_regles_log_iptables)
             self.bouton_ajouter_regles_iptables.place(relx=0.08, rely=0.7)
