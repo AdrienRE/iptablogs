@@ -32,7 +32,7 @@ sudo iptables -A FORWARD -j LOG --log-prefix="[netfilter-FORWARD] "
 ```
 
 ## How to use this program ?
-###### ** Filling the table :**
+###### Filling the table :
 Once you have launched the program, click on the button "Initialiser". If you correctly followed the previous steps, it will read the log file and display the logs in the table. You'll have to click on that button again if you want to refresh the table as well.
 
 ###### Change the columns you want to display : 
