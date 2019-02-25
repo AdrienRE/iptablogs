@@ -56,7 +56,7 @@ In the right bottom corner is a frame in which you can find special functions.
 - The button "Ajouter les règles de logs iptables" adds the -j LOG rules with the appropriate parameters in your iptables.
 
 ## Contribute
-You can contribute in any way you want (add features, optimize, translate, etc...).
+You can contribute in any way you want (add features, optimize, translate, etc...). You can also help by reporting bugs or suggesting improvements.
 
 ## Contact
-For more informations, feel free to contact me at undercover1[at]live.fr
+For more informations or help using iptablogs, feel free to contact me at undercover1[at]live.fr.
