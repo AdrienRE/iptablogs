@@ -1,19 +1,19 @@
 # iptablogs
-iptablogs is a short program written in Python 3.7.2 as a student project. Its goal is to make it easier to filter and sort the logs from  iptables, specifically on the Filter table.
+iptablogs is a short script/program written in Python 3.7.2 as a student project. Its goal is to make it easier to filter and sort the logs from iptables, specifically on the Filter table. For more details on how it works, take a look at the external_doc.pdf file.
 
 ## Disclaimer
-This program is released under the GPL-3 licence. As stated in the licence file, this program is not covered by any warranty and I shall not be held responsible for any problem that may arise from its use.
+This script/program is released under the GPL-3 licence. As stated in the licence file, this script/program is not covered by any warranty and I shall not be held responsible for any problem that may arise from its use.
 Please read the LICENCE for more details.
 
 ## Important notes
 Please read the following instructions carefully.
-This program needs to be run as root, as the log file belongs to root and the functions described in the "special functions" part need root privileges as well.
+Iptablogs needs to be run as root, as the log file belongs to root and the functions described in the "special functions" part need root privileges as well. It has only be tested on Python 3.7.2 under Debian 9.5 (it won't work well on Python 3.5 FYI).
 
 ## Configuration
-Before using this program, you need to do the following to enable iptables logging and redirect the log messages in a separate file :
+Before using this iptablogs, you need to do the following to enable iptables logging and redirect the log messages in a separate file :
 
 ###### The easy way : 
-Launch the program, click on the buttons "Rediriger les logs dans /var/logs/iptables.log" and "Ajouter les règles de logs iptables". 
+Launch iptablogs using **sudo iptablogs.py**, click on the buttons "Rediriger les logs dans /var/logs/iptables.log" and "Ajouter les règles de logs iptables". 
 You can now start using it.
 
 ###### The less easy way :
@@ -33,7 +33,7 @@ sudo iptables -A FORWARD -j LOG --log-prefix="[netfilter-FORWARD] "
 
 ## How to use this program ?
 ###### Filling the table :
-Once you have launched the program, click on the button "Initialiser". If you correctly followed the previous steps, it will read the log file and display the logs in the table. You'll have to click on that button again if you want to refresh the table as well.
+Once you have launched iptablogs, click on the button "Initialiser". If you correctly followed the previous steps, it will read the log file and display the logs in the table. You'll have to click on that button again if you want to refresh the table as well.
 
 ###### Change the columns you want to display : 
 Just select the columns under "Colonnes à afficher" (you can use CTRL or drag the mouse to select several columns), then click on "Appliquer".
