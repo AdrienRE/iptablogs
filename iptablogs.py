@@ -1,4 +1,4 @@
-#!/usr/bin/python3.7
+#!/usr/bin/env python3
 # -*-coding:Utf-8 -*
 
 from tkinter import *
