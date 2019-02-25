@@ -7,6 +7,12 @@ from re import search
 from os import getuid
 from subprocess import getoutput
 
+
+# iptablogs by Adrien REYNAUD
+# https://github.com/AdrienRE/iptablogs
+# Please read the README.md file before using this or to know how to contribute.
+
+
 # dico_colonnes is a dictionary containing for each column of the table, the variable name and the corresponding
 # formated name. It is used to display column names but also to browse the attributes of the lines :
 
