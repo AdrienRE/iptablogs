@@ -376,9 +376,10 @@ class Interface(object):
         class Lignelimitee:
             """The objects from this class have similar attributes to those of Lignelog.
 
-            It basically recreates the lines after all filters and sorting have been applied. We can't use the class
-            Lignelog because its __init__ would search for regular expressions again in a string. Instead we browse the
-            dictionary dico_colonnes to assign a value to each corresponding attribute of Lignelimitee.
+            It is used to create similar objects as Lignelog but the attributes values are lists based on the filters
+            the user specified. We can't use the class Lignelog because its __init__ would search for regular
+            expressions again in a string. Instead we browse the dictionary dico_colonnes to create an attribute name,
+            the values are provided by the liste_arguments variable.
 
             """
 
