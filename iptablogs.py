@@ -80,7 +80,7 @@ class Interface(object):
     # We want to catch every unpredicted error.
     try:
         def __init__(self):
-            # The list liste_lignes_log_initiale will hold the lines read from the log file. Because it's going to
+            # The list liste_lignes_log_initiale will hold the lines read from the log file. Because it's going to be
             # used in a method of this class and also because we don't want to use a global variable, it's registered
             # here as an attribute of the Interface class object :
             self.liste_lignes_log_initiale = []
