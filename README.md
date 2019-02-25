@@ -46,7 +46,7 @@ Once you're done, click on "Filtrer et trier".
 ###### Filter the lines : 
 In the middle of the screen, you'll find the "Filtres" frame in which you can add filters. You have to separate each filter by a comma followed by a space (or it just won't work). 
 e.g. : "filter1, filter2, filter3" etc...
-or "filter1, , filter2" (if you want to use blank filters)
+or "filter1, , filter2" (if you want to use blank filters).
 Then just click on "Filtrer et trier".
 
 ###### Special functions (USE WITH CAUTION !) : 
