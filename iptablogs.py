@@ -61,7 +61,6 @@ def appeler_fenetre_erreur(err, msg="Erreur inconnue"):
     fenetre_erreur.title("Erreur")
     label_erreur = Label(fenetre_erreur, text="{}\n{}".format(msg, err))
     label_erreur.pack()
-    fenetre_erreur.mainloop()
 
 
 def appeler_fenetre_stdout(msg_stdout):
@@ -74,7 +73,6 @@ def appeler_fenetre_stdout(msg_stdout):
     fenetre_stdout.title("stdout")
     label_stdout = Label(fenetre_stdout, text=msg_stdout)
     label_stdout.pack()
-    fenetre_stdout.mainloop()
 
 
 class Interface(object):
