@@ -7,10 +7,10 @@ Please read the LICENCE for more details.
 
 ## Important notes
 Please read the following instructions carefully.
-This program needs to be run as root, as the log file belongs to root and some of the functions need to be run as root.
+This program needs to be run as root, as the log file belongs to root and the functions described in the "special functions" part need root privileges as well.
 
 ## Configuration
-Before using this program, you need to do the following :
+Before using this program, you need to do the following to enable iptables logging and redirect the log messages in a separate file :
 
 ###### The easy way : 
 Launch the program, click on the buttons "Rediriger les logs dans /var/logs/iptables.log" and "Ajouter les règles de logs iptables". 
@@ -49,7 +49,7 @@ e.g. : "filter1, filter2, filter3" etc...
 or "filter1, , filter2" (if you want to use blank filters)
 Then just click on "Filtrer et trier".
 
-###### Special functions (USE WITH CAUTION !) :
+###### Special functions (USE WITH CAUTION !) : 
 In the right bottom corner is a frame in which you can find special functions.
 - The button "Effacer le fichier de logs" simply deletes the current log file and restarts the rsyslog service.
 - The button "Rediriger les logs dans /var/logs/iptables.logs" creates the 1-iptables.conf file if you didn't manually do it.
