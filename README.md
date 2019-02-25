@@ -1,5 +1,5 @@
 # iptablogs
-iptablogs is a short script/program written in Python 3.7.2 as a student project. Its goal is to make it easier to filter and sort the logs from iptables, specifically on the Filter table. For more details on how it works, take a look at the external_doc.pdf file.
+iptablogs is a short script/program written by me (Adrien REYNAUD) in Python 3.7.2 as a student project. Its goal is to make it easier to filter and sort the logs from iptables, specifically on the Filter table. For more details on how it works, take a look at the external_doc.pdf file.
 
 ## Disclaimer
 This script/program is released under the GPL-3 licence. As stated in the licence file, this script/program is not covered by any warranty and I shall not be held responsible for any problem that may arise from its use.
