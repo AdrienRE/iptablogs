@@ -241,7 +241,7 @@ class Interface(object):
             self.bouton_effacer_log.place(relx=0.08, rely=0.1)
             # This button triggers the method rediriger_les_logs_iptables :
             self.bouton_rediriger_logs = Button(self.trame_fonctions_speciales,
-                                                text="Rediriger les logs dans /var/logs/iptables.log",
+                                                text="Rediriger les logs dans /var/log/iptables.log",
                                                 command=self.rediriger_les_logs_iptables)
             self.bouton_rediriger_logs.place(relx=0.08, rely=0.4)
             # This button triggers the method ajouter_regles_log_iptables :
