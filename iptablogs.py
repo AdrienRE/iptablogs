@@ -415,7 +415,7 @@ class Interface(object):
                     nom_attribut = index_trame.winfo_name()
                     # If the input box names are "port_source" or "port_destination", we convert them into integers
                     # before adding them to the list "valeurs".
-                    if nom_attribut == ("port_source" or "port_destination"):
+                    if nom_attribut in ["port_source", "port_destination"]:
                         try:
                             valeurs = [int(nombre) for nombre in ((index_trame.get()).split(", "))]
                         except ValueError as erreur_valeur:
