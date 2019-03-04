@@ -1,8 +1,8 @@
 # iptablogs
-iptablogs is a short script/program written by me (Adrien REYNAUD) in Python 3.7.2 as a student project. Its goal is to make it easier to filter and sort the logs from iptables, specifically on the Filter table. For more details on how it works, take a look at the external_doc.pdf file.
+iptablogs is a short script written by me (Adrien REYNAUD) in Python 3.7.2 as a student project. Its goal is to make it easier to filter and sort the logs from iptables, specifically on the Filter table. For more details on how it works, take a look at the external_doc.pdf file.
 
 ## Disclaimer
-This script/program is released under the GPL-3 licence. As stated in the licence file, this script/program is not covered by any warranty and I shall not be held responsible for any problem that may arise from its use.
+This script is released under the GPL-3 licence. As stated in the licence file, this script is not covered by any warranty and I shall not be held responsible for any problem that may arise from its use.
 Please read the LICENCE for more details.
 
 ## Important notes
@@ -31,7 +31,7 @@ sudo iptables -A OUTPUT -j LOG --log-prefix="[netfilter-OUTPUT] "
 sudo iptables -A FORWARD -j LOG --log-prefix="[netfilter-FORWARD] "
 ```
 
-## How to use this program ?
+## How to use this script ?
 ###### Filling the table :
 Once you have launched iptablogs, click on the button "Initialiser". If you correctly followed the previous steps, it will read the log file and display the logs in the table. You'll have to click on that button again if you want to refresh the table as well.
 
